@@ -18,7 +18,7 @@ class CustomUser(BaseModel, AbstractUser ):
 class Profile(BaseModel):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="profile",
     )
     profile_image = models.ImageField(
