@@ -1,15 +1,11 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from core import settings
 from core.models import BaseModel
 
 
-class CustomUser(BaseModel, User):
-    profile = models.OneToOneField(
-        "Profile",
-        on_delete=models.CASCADE,
-        related_name="custom_user",
-    )
+class CustomUser(BaseModel, AbstractUser ):
 
     def __str__(self):
         return self.username
@@ -21,9 +17,9 @@ class CustomUser(BaseModel, User):
 
 class Profile(BaseModel):
     user = models.OneToOneField(
-        "CustomUser",
+        settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name="profile_info",
+        related_name="profile",
     )
     profile_image = models.ImageField(
         upload_to='profiles/',
