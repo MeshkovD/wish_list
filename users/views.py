@@ -1,25 +1,31 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 from users.models import CustomUser, Profile
 from users.serializers import CustomUserSerializer, ProfileSerializer
-from rest_framework.viewsets import ModelViewSet
 
 
-class CustomUserList(generics.ListCreateAPIView):
+class CustomUserCreate(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class CustomUserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
+    def get_queryset(self):
+        return CustomUser.objects.filter(pk=self.request.user.pk)
 
-class ProfileList(generics.ListCreateAPIView):
-    queryset = Profile.objects.all()
+
+class ProfileList(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
+    def get_queryset(self):
+        return Profile.objects.filter(user=self.request.user)
 
-class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Profile.objects.all()
+
+class ProfileDetail(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        return Profile.objects.filter(user=self.request.user)
